@@ -123,11 +123,11 @@ getUser(1)
 
 // promise.any()
 const promise1 = new Promise((resolve, reject) => {
-    setTimeout(() => resolve('Promise 1 resolved'), 1000);
+    setTimeout(() => reject('Promise 1 resolved'), 1000);
   });
   
   const promise2 = new Promise((resolve, reject) => {
-    setTimeout(() => resolve('Promise 2 resolved'), 4000);
+    setTimeout(() => reject('Promise 2 resolved'), 2000);
   });
   
   const promise3 = new Promise((resolve, reject) => {
@@ -144,15 +144,15 @@ const promise1 = new Promise((resolve, reject) => {
 
 //   promise.all
   const promise4 = new Promise((resolve, reject) => {
-   resolve('Promise 1 resolved')
+   resolve('Promise 1 resolve');
   });
   
   const promise5 = new Promise((resolve, reject) => {
-   resolve('Promise 2 resolved')
+   reject('Promise 2 rejected');
   });
   
   const promise6 = new Promise((resolve, reject) => {
-   resolve('Promise 3 rejected')
+   resolve('Promise 3 resolve');
   });
 
   Promise.all([promise4, promise5, promise6])
@@ -165,7 +165,7 @@ const promise1 = new Promise((resolve, reject) => {
 
 //   promise.race()
   const promise7 = new Promise((resolve, reject) => {
-    setTimeout(() => reject('Promise 7 rejected'), 2000);
+    setTimeout(() => reject('Promise 7 rejected'), 1000);
   });
   
   const promise8 = new Promise((resolve, reject) => {
@@ -173,7 +173,7 @@ const promise1 = new Promise((resolve, reject) => {
   });
   
   const promise9 = new Promise((resolve, reject) => {
-    setTimeout(() => resolve('Promise 9 resolved'), 9000);
+    setTimeout(() => resolve('Promise 9 resolved'), 5000);
   });
 
   Promise.race([promise7, promise8, promise9])
@@ -190,11 +190,11 @@ const promise1 = new Promise((resolve, reject) => {
   });
 
   const promise11 = new Promise((resolve, reject) => {
-    setTimeout(() => reject("Promise 11 resolved"), 2000);
+    setTimeout(() => reject("Promise 11 resolved"), 1000);
   });
 
   const promise12 = new Promise((resolve, reject) => {
-    setTimeout(() => resolve("Promise 12 resolved"), 3000);
+    setTimeout(() => reject("Promise 12 resolved"), 1000);
   });
 
   Promise.allSettled([promise10, promise11, promise12]).then((data) => {
