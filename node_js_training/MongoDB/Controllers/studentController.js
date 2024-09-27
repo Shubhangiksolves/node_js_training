@@ -1,10 +1,11 @@
 const studentModel = require('../Models/student');
 const {v4: uuidv4} = require('uuid');
-const {setStudent} = require('../Service/auth')
+const {setStudent} = require('../Service/auth');
+const { setStudentJwt } = require('../Service/jwtAuth');
 
 const handleSignup = async(req, res) => {
-    const {name, email, password} = req.body;
-    await studentModel.create({name: name, email: email, password: password});
+    const {name, email, password, role} = req.body;
+    await studentModel.create({name: name, email: email, password: password, role: role});
     return res.render('/');
 } 
 
@@ -17,10 +18,18 @@ const handlelogin = async(req, res) => {
         });
     }
    else {
-    const sessionId = uuidv4();
-    setStudent(sessionId, student);
-    res.cookie('session_id', sessionId);
-    return res.redirect('/');}
+    //statefull
+
+    // const sessionId = uuidv4();
+    // setStudent(sessionId, student);
+    // res.cookie('session_id', sessionId);
+
+    //stateless
+    
+    const token = setStudentJwt(student);
+    res.cookie('token', token);
+    return res.redirect('/');
+}
 } 
 
 module.exports = {handleSignup, handlelogin};

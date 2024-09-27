@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 
 const connectMongoDB = require('./connection');
 
-const { restricTOLoggedinStudentOnly} = require('./Middleware/auth')
+const { restricTOLoggedinStudentOnly, checkAuth} = require('./Middleware/auth')
 const {logReqRes} = require('./Middleware/index');
 
 const staticRoute = require('./Routes/staticRouter');
@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(logReqRes('log.txt'));
 app.use(cookieParser());
+app.use(restricTOLoggedinStudentOnly)
 
 // Connection
 connectMongoDB('mongodb://127.0.0.1:27017/mongo-db-test');
@@ -39,11 +40,17 @@ const testUser = [
     }
 ]
 
-app.get('/restrict-route', restricTOLoggedinStudentOnly, (req,res) => {
+app.get('/restrict-route', checkAuth(['PUBLIC, ADMIN']), (req,res) => {
     return res.render('home', {
         users: testUser
     });
 });
+
+app.get('/admin', checkAuth(['ADMIN']), (req, res) => {
+    return res.render('home', {
+        users: testUser
+    }); 
+})
 app.use('/', staticRoute);
 app.use('/', userRouter);
 app.use('/student', studentRouter);
